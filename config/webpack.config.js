@@ -26,7 +26,39 @@ const ForkTsCheckerWebpackPlugin =
     : require('react-dev-utils/ForkTsCheckerWebpackPlugin');
 const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
 const ModuleFederationPlugin = require("webpack/lib/container/ModuleFederationPlugin");
+const chalk = require('react-dev-utils/chalk');
 
+const clearConsole = require('react-dev-utils/clearConsole');
+
+
+const MS_BUILD_PATH = null;
+const MS_NAME = null;
+
+const MS_BUILD_PATH_ERR = `--> Please add the build path followed by your PORT: http://localhost:PORT on config/webpack.config.js line number 32  `
+const MS_NAME_ERR = `--> Please add your microfrontend name on config/webpack.config.js line number 33`
+let ERR_MSG = ''
+if (!MS_BUILD_PATH) {
+  ERR_MSG += MS_BUILD_PATH_ERR + '\n' + '\n'
+}
+
+if (!MS_NAME) {
+  ERR_MSG += MS_NAME_ERR
+}
+
+if (ERR_MSG) {
+  clearConsole()
+  console.log()
+  console.log()
+  console.log()
+  console.log(chalk.yellow('------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------'))
+  console.log()
+  console.error(chalk.green(ERR_MSG))
+  console.log()
+  console.log(chalk.yellow('------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------'))
+  console.log()
+  console.log()
+  return;
+}
 
 const deps = require("../package.json").dependencies;
 
@@ -206,7 +238,7 @@ module.exports = function (webpackEnv) {
     // This means they will be the "root" imports that are included in JS bundle.
     entry: paths.appIndexJs,
     output: {
-      publicPath: "http://localhost:3001/",
+      publicPath: MS_BUILD_PATH,
 
     },
     infrastructureLogging: {
@@ -557,7 +589,7 @@ module.exports = function (webpackEnv) {
         )
       ),
       new ModuleFederationPlugin({
-        name: "mf-boilerplate", // Current App name
+        name: MS_NAME, // Current App name
         filename: "remoteEntry.js", // filename
         remotes: {}, // the micro frontends to use in container the things which we want import from other 
         exposes: {

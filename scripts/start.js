@@ -43,8 +43,21 @@ if (!checkRequiredFiles([paths.appHtml, paths.appIndexJs])) {
   process.exit(1);
 }
 
+const PORT = null;
+const ERR_MSG = "--> Please add a PORT to run this Application on file scripts/start.js line no - 46"
+
+if (!PORT) {
+  console.error(chalk.green(ERR_MSG))
+  console.log()
+  console.log()
+  console.log(chalk.yellow('------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------'))
+  console.log()
+  return;
+
+}
+
 // Tools like Cloud9 rely on this.
-const DEFAULT_PORT = parseInt(process.env.PORT, 10) || 3000;
+const DEFAULT_PORT = PORT;
 const HOST = process.env.HOST || '0.0.0.0';
 
 if (process.env.HOST) {
